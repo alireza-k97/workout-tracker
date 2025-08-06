@@ -1,0 +1,25 @@
+{
+  "workouts": [
+    {
+      "id": "1",
+      "name": "شنا",
+      "type": "cardio",
+      "date": "2025-07-31",
+      "calories": 150
+    },
+    {
+      "id": "74d4",
+      "name": "لیفت",
+      "type": "strength",
+      "date": "2025-07-01",
+      "calories": "200"
+    },
+    {
+      "id": "3894",
+      "name": "دو 200",
+      "type": "cardio",
+      "date": "2025-08-08",
+      "calories": "120"
+    }
+  ]
+}
