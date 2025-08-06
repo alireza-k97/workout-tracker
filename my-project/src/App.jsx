@@ -11,33 +11,43 @@ function App() {
     const saved = localStorage.getItem("workouts");
     return saved ? JSON.parse(saved) : [];
   });
+  const [editWorkout, setEditWorkout] = useState(null);
 
   // ایندفعه هر بار workouts تغییر کند، در localStorage به‌روزرسانی میشود
   useEffect(() => {
     localStorage.setItem("workouts", JSON.stringify(workouts));
   }, [workouts]);
 
-  // اضافه کردن تمرین جدید به آرایه
-  const handleAddWorkout = (newWorkout) => {
-    setWorkouts([...workouts, newWorkout]);
-  };
+  // اضافه کردن و آپدیت تمرین جدید به آرایه
+  const handleAddOrUpdateWorkout = (workout) => {
+  if (editWorkout) {
+    // ویرایش: مقدار قدیم را با مقدار جدید جایگزین کن
+    setWorkouts(workouts.map(w => w === editWorkout ? workout : w));
+    setEditWorkout(null); // حالت ویرایش را بردار
+  } else {
+    // اضافه کردن تمرین جدید
+    setWorkouts([...workouts, workout]);
+  }
+};
+
 
   // حذف تمرین (حذف بر اساس اسم و تاریخ یا هر شناسه دیگری)
   const handleDeleteWorkout = (workoutToDelete) => {
     setWorkouts(workouts.filter(w => w !== workoutToDelete));
   };
 
-  // ویرایش تمرین (برای شروع فقط پیام نمایش میده)
+  // ویرایش تمرین
+
   const handleEditWorkout = (workoutToEdit) => {
-    alert(`میخواهید تمرین "${workoutToEdit.name}" را ویرایش کنید.`);
-    // میتوانی اینجا مکانیزم ارسال داده به فرم برای ویرایش را بعدا اضافه کنی
-  };
+  setEditWorkout(workoutToEdit);
+};
+
 
    return(
     <div dir='rtl'>
       <Navbar /> 
-      <div className='flex flex-col justify-center items-center gap-4 md:flex-row'>
-        <WorkoutForm onAdd={handleAddWorkout}/>
+      <div className='bg-purple-500 shadow-md px-6 py-3 rounded-xl m-4 flex flex-col justify-center items-center gap-4 md:flex-row'>
+        <WorkoutForm onAddOrUpdate={handleAddOrUpdateWorkout} editWorkout={editWorkout} />
         <ProgressBarChart data={workouts}/>
       </div>
         <WorkoutList

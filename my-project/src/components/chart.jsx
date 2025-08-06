@@ -26,7 +26,7 @@ function ProgressBarChart({ data }) {
         label: "کالری سوزانده شده",
         data: calories,
         backgroundColor: "rgba(37, 99, 235, 0.7)",
-        borderRadius: 6,
+        borderRadius: 2,
       }
     ]
   };

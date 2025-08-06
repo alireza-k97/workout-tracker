@@ -1,18 +1,25 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
-function WorkoutForm({ onAdd }) {
+function WorkoutForm({ onAddOrUpdate, editWorkout }) {
   const [form, setForm] = useState({
     name: "",
     type: "",
     date: "",
     calories: "",
   });
+
+   useEffect(() => {
+    if(editWorkout){
+      setForm(editWorkout);
+    }
+  }, [editWorkout]);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAdd(form);
+    onAddOrUpdate(form);
     setForm({ name: "", type: "", date: "", calories: "" });
   };
 
@@ -84,12 +91,12 @@ function WorkoutForm({ onAdd }) {
           required
         />
       </div>
-
+      
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-bold text-lg shadow transition cursor-pointer"
       >
-        ثبت تمرین
+      {editWorkout ? "ویرایش تمرین" : "ثبت تمرین"}
       </button>
     </form>
   );
