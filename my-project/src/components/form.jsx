@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 
 function WorkoutForm({ onAddOrUpdate, editWorkout }) {
   const [form, setForm] = useState({
+    id :"",
     name: "",
     type: "",
     date: "",
@@ -9,18 +10,25 @@ function WorkoutForm({ onAddOrUpdate, editWorkout }) {
   });
 
    useEffect(() => {
-    if(editWorkout){
+    if (editWorkout) {
       setForm(editWorkout);
+    } else {
+      // اگر حالت ویرایش نیست، فرم را خالی کن
+      setForm({ id: "", name: "", type: "", date: "", calories: "" });
     }
   }, [editWorkout]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddOrUpdate(form);
-    setForm({ name: "", type: "", date: "", calories: "" });
+    onAddOrUpdate(form, form.id);  // ارسال کل فرم به همراه id
+    // بعد از ارسال در حالت ویرایش، فرم خالی می‌شود (اگر ویرایش بود)
+    if (!editWorkout) {
+      setForm({ id: "", name: "", type: "", date: "", calories: "" });
+    }
   };
 
   return (

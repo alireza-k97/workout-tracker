@@ -19,40 +19,52 @@ function App() {
 
   // اضافه کردن و آپدیت تمرین جدید به آرایه
   const handleAddOrUpdateWorkout = (workout, id) => {
-    if (editWorkout) {
-      fetch(`http://localhost:8000/workouts/${id}`, {
-        method: "PUT",
-        headers: {
-          "content-type": "aplication/json",
-        },
-        body: JSON.stringify(workout),
-      })
-        .then((res) => res.json())
-        .then((data) =>
-          setWorkouts(workout => workout.map(w => w.id === id ? data : w))
-        .catch((err) => console.error("خطا در ویرایش:", err))
+  if (editWorkout) {
+    fetch(`http://localhost:8000/workouts/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(workout),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setWorkouts((prev) =>
+          prev.map((w) => String(w.id) === String(id) ? data : w)
         );
-      // ویرایش: مقدار قدیم را با مقدار جدید جایگزین کن
-      // setWorkouts(workouts.map(w => w === editWorkout ? workout : w));
-      // setEditWorkout(null); // حالت ویرایش را بردار
-    } else {
-      fetch("http://localhost:8000/workouts", {
-        method: "post",
-        headers: {
-          "content-type": "aplication/json",
-        },
-        body: JSON.stringify(workout),
+        setEditWorkout(null);
       })
-        .then((res) => res.json())
-        .then((data) => setWorkouts([...workouts, data]))
-        .catch((err) => console.error("خطا در اضافه کردن:", err));
-    }
-  };
+      .catch((err) => console.error("خطا در ویرایش:", err));
+  } else {
+    fetch("http://localhost:8000/workouts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(workout),
+    })
+      .then((res) => res.json())
+      .then((data) => setWorkouts((prev) => [...prev, data]))
+      .catch((err) => console.error("خطا در اضافه کردن:", err));
+  }
+};
+
 
   // حذف تمرین (حذف بر اساس اسم و تاریخ یا هر شناسه دیگری)
+  // const handleDeleteWorkout = (workoutToDelete) => {
+  //   setWorkouts(workouts.filter((w) => w !== workoutToDelete));
+  // };
   const handleDeleteWorkout = (workoutToDelete) => {
-    setWorkouts(workouts.filter((w) => w !== workoutToDelete));
-  };
+  fetch(`http://localhost:8000/workouts/${workoutToDelete.id}`, {
+    method: "DELETE",
+  })
+    .then(() => {
+      // پس از حذف موفق، به‌روزرسانی state
+      setWorkouts((prev) => prev.filter((w) => w.id !== workoutToDelete.id));
+    })
+    .catch((err) => console.error("خطا در حذف:", err));
+};
+
 
   // ویرایش تمرین
 
